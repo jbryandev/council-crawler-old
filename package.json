@@ -6,6 +6,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "mongodb": "^4.10.0",
+    "mongoose": "^6.6.1",
     "next": "latest",
     "react": "18.1.0",
     "react-dom": "18.1.0"
