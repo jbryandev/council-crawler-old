@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import dbConnect from '../lib/dbConnect';
 
+/* Retrieves data from mongodb database */
 export async function getServerSideProps() {
   await dbConnect();
 
