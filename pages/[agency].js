@@ -32,7 +32,11 @@ export default function Agency({ agency, agendas }) {
             <ul>
               {agendas.map((agenda) => (
                 <li className='list-disc list-inside' key={agenda.id}>
-                  <Link href={`/${agency.slug}/${agenda.date}`}>
+                  <Link
+                    href={`/${encodeURIComponent(
+                      agency.slug
+                    )}/${encodeURIComponent(agenda.date)}`}
+                  >
                     <a className='underline hover:text-success duration-200 transition-colors'>
                       {agenda.date}
                     </a>
@@ -61,7 +65,8 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   const allAgencies = await getAllAgencies();
   return {
-    paths: allAgencies?.map((agency) => `/${agency.slug}`) || [],
+    paths:
+      allAgencies?.map((agency) => `/${encodeURIComponent(agency.slug)}`) || [],
     fallback: true,
   };
 }

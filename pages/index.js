@@ -19,7 +19,7 @@ export default function Index({ allAgencies }) {
             <ul>
               {agencies.map((agency) => (
                 <li className='list-disc list-inside' key={agency.id}>
-                  <Link href={`/${agency.slug}`}>
+                  <Link href={`/${encodeURIComponent(agency.slug)}`}>
                     <a className='underline hover:text-success duration-200 transition-colors'>
                       {agency.name}
                     </a>

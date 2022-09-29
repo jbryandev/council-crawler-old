@@ -27,7 +27,7 @@ export default function Agenda({ agency, agenda }) {
               </title>
             </Head>
             <Header>
-              <Link href={`/${agency.slug}`}>
+              <Link href={`/${encodeURIComponent(agency.slug)}`}>
                 <a className='hover:underline'>{agency.name}</a>
               </Link>
             </Header>
@@ -35,7 +35,10 @@ export default function Agenda({ agency, agenda }) {
               <Date dateString={agenda.date} />
             </PageTitle>
             <Link href={`${agenda.url}`}>
-              <a className='underline hover:text-success duration-200 transition-colors'>
+              <a
+                className='underline hover:text-success duration-200 transition-colors'
+                target='_blank'
+              >
                 {agenda.url}
               </a>
             </Link>
