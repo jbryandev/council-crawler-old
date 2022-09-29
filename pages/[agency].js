@@ -48,7 +48,7 @@ export default function Agency({ agency, agendas }) {
 }
 
 export async function getStaticProps({ params }) {
-  const agency = await getAgency(params.slug);
+  const agency = await getAgency(params.agency);
   const agendas = (await getAllAgencyAgendas(agency.id)) || [];
   return {
     props: {
