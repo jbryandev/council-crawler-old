@@ -2,7 +2,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '@/components/layout';
 import Container from '@/components/container';
-import PageTitle from '@/components/page-title';
 import Intro from '@/components/intro';
 import { getAllAgencies } from '@/lib/api';
 
