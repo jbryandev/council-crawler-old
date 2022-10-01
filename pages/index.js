@@ -15,7 +15,7 @@ export default function Index({ allAgencies }) {
         </Head>
         <Container>
           <Intro />
-          <section>
+          <section className='flex-col md:flex-row flex items-center md:justify-between'>
             <ul>
               {agencies.map((agency) => (
                 <li className='list-disc list-inside' key={agency.id}>
