@@ -3,10 +3,16 @@ import Link from 'next/link';
 import Layout from '@/components/layout';
 import Container from '@/components/container';
 import Intro from '@/components/intro';
-import { getAllAgencies } from '@/lib/api';
+// import { getAllAgencies } from '@/lib/api';
+import { GetStaticProps } from 'next';
+import { Agency } from '@/interfaces';
+import { sampleAgencyData } from '@/utils/sample-data';
 
-export default function Index({ allAgencies }) {
-  const agencies = allAgencies;
+type Props = {
+  agencies: Agency[];
+};
+
+export default function Index({ agencies }: Props) {
   return (
     <>
       <Layout>
@@ -34,9 +40,10 @@ export default function Index({ allAgencies }) {
   );
 }
 
-export async function getStaticProps() {
-  const allAgencies = (await getAllAgencies()) || [];
+export const getStaticProps: GetStaticProps = async () => {
+  // const allAgencies = (await getAllAgencies()) || [];
+  const agencies: Agency[] = sampleAgencyData;
   return {
-    props: { allAgencies },
+    props: { agencies },
   };
-}
+};

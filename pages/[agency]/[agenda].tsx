@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { useRouter } from 'next/router';
 import ErrorPage from 'next/error';
 import Head from 'next/head';
@@ -7,13 +8,23 @@ import Container from '@/components/container';
 import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
 import Date from '@/components/date';
-import { getAgency, getAgenda } from '@/lib/api';
+import { Agency, Agenda } from '@/interfaces';
+import { sampleAgencyData, sampleAgendaData } from '@/utils/sample-data';
+import { GetStaticProps, GetStaticPaths } from 'next';
 
-export default function Agenda({ agency, agenda }) {
+type Props = {
+  agency: Agency;
+  agenda: Agenda;
+  errors: string;
+};
+
+export default function AgencyIndex({ agency, agenda, errors }: Props) {
   const router = useRouter();
-  if (!router.isFallback && !agenda?.date) {
+
+  if ((!router.isFallback && !agenda.date) || errors) {
     return <ErrorPage statusCode={404} />;
   }
+
   return (
     <Layout>
       <Container>
@@ -67,20 +78,41 @@ export default function Agenda({ agency, agenda }) {
   );
 }
 
-export async function getStaticProps({ params }) {
-  const agency = await getAgency(params.agency);
-  const agenda = await getAgenda(agency.id, params.agenda);
-  return {
-    props: {
-      agency,
-      agenda,
-    },
-  };
-}
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  try {
+    const agency = sampleAgencyData.find(
+      (agency) => agency?.slug === params?.agency
+    );
+    if (!agency) {
+      return { notFound: true };
+    }
+    const agenda = sampleAgendaData.find(
+      (agenda) => agenda.date === params?.agenda
+    );
+    if (!agenda) {
+      return { notFound: true };
+    }
 
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: true,
-  };
-}
+    return {
+      props: {
+        agency,
+        agenda,
+      },
+    };
+  } catch (err: any) {
+    return { props: { errors: err.message } };
+  }
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = sampleAgendaData.map((agenda) => {
+    return {
+      params: {
+        agency: agenda.agency.slug,
+        agenda: agenda.date,
+      },
+    };
+  });
+
+  return { paths, fallback: true };
+};
