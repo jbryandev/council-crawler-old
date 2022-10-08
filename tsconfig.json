@@ -19,7 +19,6 @@
       "@/components/*": ["components/*"],
       "@/lib/*": ["lib/*"],
       "@/styles/*": ["styles/*"],
-      "@/interfaces": ["interfaces/index"],
       "@/utils/*": ["utils/*"]
     }
   },

@@ -1,4 +1,4 @@
-import { Agency, Agenda } from '../interfaces';
+import { Agency, Agenda } from '@/lib/types';
 
 /** Dummy agency data. */
 export const sampleAgencyData: Agency[] = [

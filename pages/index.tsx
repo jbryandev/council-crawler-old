@@ -3,10 +3,9 @@ import Link from 'next/link';
 import Layout from '@/components/layout';
 import Container from '@/components/container';
 import Intro from '@/components/intro';
-// import { getAllAgencies } from '@/lib/api';
 import { GetStaticProps } from 'next';
-import { Agency } from '@/interfaces';
-import { sampleAgencyData } from '@/utils/sample-data';
+import { Agency } from '@/lib/types';
+import { getAllAgencies } from '@/lib/datocms';
 
 type Props = {
   agencies: Agency[];
@@ -41,8 +40,7 @@ export default function Index({ agencies }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  // const allAgencies = (await getAllAgencies()) || [];
-  const agencies: Agency[] = sampleAgencyData;
+  const agencies: Agency[] = await getAllAgencies();
   return {
     props: { agencies },
   };

@@ -8,8 +8,8 @@ import Container from '@/components/container';
 import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
 import Date from '@/components/date';
-import { Agency, Agenda } from '@/interfaces';
-import { sampleAgencyData, sampleAgendaData } from '@/utils/sample-data';
+import { Agency, Agenda } from '@/lib/types';
+import { getAgenda, getAgency } from '@/lib/datocms';
 import { GetStaticProps, GetStaticPaths } from 'next';
 
 type Props = {
@@ -80,15 +80,13 @@ export default function AgencyIndex({ agency, agenda, errors }: Props) {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
-    const agency = sampleAgencyData.find(
-      (agency) => agency?.slug === params?.agency
-    );
+    const slug = params?.agency as string;
+    const agency = await getAgency(slug);
     if (!agency) {
       return { notFound: true };
     }
-    const agenda = sampleAgendaData.find(
-      (agenda) => agenda.date === params?.agenda
-    );
+    const date = params?.agenda as string;
+    const agenda = await getAgenda(agency.id, date);
     if (!agenda) {
       return { notFound: true };
     }
@@ -105,14 +103,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = sampleAgendaData.map((agenda) => {
-    return {
-      params: {
-        agency: agenda.agency.slug,
-        agenda: agenda.date,
-      },
-    };
-  });
-
-  return { paths, fallback: true };
+  return { paths: [], fallback: true };
 };

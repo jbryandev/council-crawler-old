@@ -7,8 +7,8 @@ import Layout from '@/components/layout';
 import Container from '@/components/container';
 import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
-import { Agency, Agenda } from '@/interfaces';
-import { sampleAgencyData, sampleAgendaData } from '@/utils/sample-data';
+import { Agency, Agenda } from '@/lib/types';
+import { getAgency, getAllAgencies, getAllAgencyAgendas } from '@/lib/datocms';
 import { GetStaticProps, GetStaticPaths } from 'next';
 
 type Props = {
@@ -64,7 +64,8 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Get the paths we want to pre-render based on agencies
-  const paths = sampleAgencyData.map((agency) => ({
+  const agencies = await getAllAgencies();
+  const paths = agencies.map((agency: Agency) => ({
     params: { agency: agency.slug },
   }));
 
@@ -73,14 +74,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
-    const slug = params?.agency;
-    const agency = sampleAgencyData.find((agency) => agency?.slug === slug);
+    const slug = params?.agency as string;
+    const agency = await getAgency(slug);
     if (!agency) {
       return { notFound: true };
     }
-    const agendas = sampleAgendaData.filter(
-      (data) => data.agency.slug === slug
-    );
+    const agendas = await getAllAgencyAgendas(agency.id);
 
     return {
       props: {
