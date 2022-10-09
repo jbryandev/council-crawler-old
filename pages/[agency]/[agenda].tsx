@@ -21,7 +21,7 @@ type Props = {
 export default function AgencyIndex({ agency, agenda, errors }: Props) {
   const router = useRouter();
 
-  if ((!router.isFallback && !agenda.date) || errors) {
+  if ((!router.isFallback && !agenda) || errors) {
     return <ErrorPage statusCode={404} />;
   }
 
