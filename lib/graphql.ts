@@ -18,6 +18,17 @@ export const getAgencyQuery = `
   }
 `;
 
+export const allAgendasQuery = `
+ {
+    allAgendas {
+      date
+      agency {
+        slug
+      }
+    }
+  }
+`;
+
 export const allAgencyAgendasQuery = `
   query ($agency_id:ItemId) {
     allAgendas(filter: {agency: {eq: $agency_id}}) {

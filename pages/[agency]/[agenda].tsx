@@ -9,7 +9,7 @@ import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
 import Date from '@/components/date';
 import { Agency, Agenda } from '@/lib/types';
-import { getAgenda, getAgency } from '@/lib/datocms';
+import { getAgenda, getAgency, getAllAgendas } from '@/lib/datocms';
 import { GetStaticProps, GetStaticPaths } from 'next';
 
 type Props = {
@@ -103,5 +103,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: true };
+  const agendas = await getAllAgendas();
+  const paths = agendas.map((agenda: Agenda) => ({
+    params: { agency: agenda.agency.slug, agenda: agenda.date },
+  }));
+  return { paths, fallback: true };
 };

@@ -3,6 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 import { Agency, Agenda } from '@/lib/types';
 import {
   allAgenciesQuery,
+  allAgendasQuery,
   allAgencyAgendasQuery,
   getAgencyQuery,
   getAgendaQuery,
@@ -35,6 +36,13 @@ export const getAgency = async (slug: string): Promise<Agency> => {
     variables: { slug },
   });
   return data?.agency;
+};
+
+export const getAllAgendas = async (): Promise<Agenda[]> => {
+  const data = await request({
+    query: allAgendasQuery,
+  });
+  return data.allAgendas;
 };
 
 export const getAllAgencyAgendas = async (
