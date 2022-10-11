@@ -31,7 +31,7 @@ export const allAgendasQuery = `
 
 export const allAgencyAgendasQuery = `
   query ($agency_id:ItemId) {
-    allAgendas(filter: {agency: {eq: $agency_id}}) {
+    allAgendas(filter: {agency: {eq: $agency_id}}, orderBy: date_DESC) {
       date
       id
     }
