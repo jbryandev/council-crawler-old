@@ -40,7 +40,7 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
               </Link>
             </Header>
             <PageTitle>{agency.name}</PageTitle>
-            <ul>
+            <ul className='text-center md:text-left'>
               {agendas.map((agenda) => (
                 <li className='list-disc list-inside' key={agenda.id}>
                   <Link

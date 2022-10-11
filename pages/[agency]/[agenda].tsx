@@ -45,14 +45,16 @@ export default function AgencyIndex({ agency, agenda, errors }: Props) {
             <PageTitle>
               <Date dateString={agenda.date} />
             </PageTitle>
-            <Link href={`${agenda.url}`}>
-              <a
-                className='underline hover:text-success duration-200 transition-colors'
-                target='_blank'
-              >
-                Agenda Link
-              </a>
-            </Link>
+            <div className='text-center md:text-left'>
+              <Link href={`${agenda.url}`}>
+                <a
+                  className='text-center md:text-left underline hover:text-success duration-200 transition-colors'
+                  target='_blank'
+                >
+                  Agenda Link
+                </a>
+              </Link>
+            </div>
             <p className='mt-6 max-w-2xl'>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
