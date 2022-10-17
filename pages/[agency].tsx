@@ -8,7 +8,11 @@ import Container from '@/components/container';
 import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
 import { Agency, Agenda } from '@/lib/types';
-import { getAgency, getAllAgencies, getAllAgencyAgendas } from '@/lib/datocms';
+import {
+  getAgencyFromSlug,
+  getAllAgencies,
+  getAllAgencyAgendas,
+} from '@/lib/datocms';
 import { GetStaticProps, GetStaticPaths } from 'next';
 
 type Props = {
@@ -75,11 +79,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const slug = params?.agency as string;
-    const agency = await getAgency(slug);
+    const agency = await getAgencyFromSlug(slug);
     if (!agency) {
       return { notFound: true };
     }
-    const agendas = await getAllAgencyAgendas(agency.id);
+    const agendas = await getAllAgencyAgendas(agency);
 
     return {
       props: {

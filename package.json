@@ -7,6 +7,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@datocms/cma-client-node": "^1.1.5",
     "date-fns": "^2.29.3",
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",

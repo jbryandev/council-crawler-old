@@ -9,7 +9,7 @@ import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
 import Date from '@/components/date';
 import { Agency, Agenda } from '@/lib/types';
-import { getAgenda, getAgency, getAllAgendas } from '@/lib/datocms';
+import { getAgenda, getAgencyFromSlug, getAllAgendas } from '@/lib/datocms';
 import { GetStaticProps, GetStaticPaths } from 'next';
 
 type Props = {
@@ -83,12 +83,12 @@ export default function AgencyIndex({ agency, agenda, errors }: Props) {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const slug = params?.agency as string;
-    const agency = await getAgency(slug);
+    const agency = await getAgencyFromSlug(slug);
     if (!agency) {
       return { notFound: true };
     }
     const date = params?.agenda as string;
-    const agenda = await getAgenda(agency.id, date);
+    const agenda = await getAgenda(agency, date);
     if (!agenda) {
       return { notFound: true };
     }
