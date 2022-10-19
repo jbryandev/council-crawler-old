@@ -22,15 +22,16 @@ export default function Index({ agencies }: Props) {
           <Intro />
           <section className='flex-col md:flex-row flex items-center md:justify-between'>
             <ul>
-              {agencies.map((agency) => (
-                <li className='list-disc list-inside' key={agency.id}>
-                  <Link href={`/${encodeURIComponent(agency.slug)}`}>
-                    <a className='underline hover:text-success duration-200 transition-colors'>
-                      {agency.name}
-                    </a>
-                  </Link>
-                </li>
-              ))}
+              {agencies &&
+                agencies.map((agency) => (
+                  <li className='list-disc list-inside' key={agency.id}>
+                    <Link href={`/${encodeURIComponent(agency.slug)}`}>
+                      <a className='underline hover:text-success duration-200 transition-colors'>
+                        {agency.name}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </section>
         </Container>

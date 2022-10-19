@@ -45,19 +45,20 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
             </Header>
             <PageTitle>{agency.name}</PageTitle>
             <ul className='text-center md:text-left'>
-              {agendas.map((agenda) => (
-                <li className='list-disc list-inside' key={agenda.id}>
-                  <Link
-                    href={`/${encodeURIComponent(
-                      agency?.slug
-                    )}/${encodeURIComponent(agenda.date)}`}
-                  >
-                    <a className='underline hover:text-success duration-200 transition-colors'>
-                      {agenda.date}
-                    </a>
-                  </Link>
-                </li>
-              ))}
+              {agendas &&
+                agendas.map((agenda) => (
+                  <li className='list-disc list-inside' key={agenda.id}>
+                    <Link
+                      href={`/${encodeURIComponent(
+                        agency?.slug
+                      )}/${encodeURIComponent(agenda.date)}`}
+                    >
+                      <a className='underline hover:text-success duration-200 transition-colors'>
+                        {agenda.date}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </>
         )}

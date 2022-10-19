@@ -1,5 +1,5 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import { buildClient, LogLevel, SchemaTypes } from '@datocms/cma-client-node';
+// import { buildClient, LogLevel, SchemaTypes } from '@datocms/cma-client-node';
 import { GraphQLClient } from 'graphql-request';
 import { Agency, Agenda } from '@/lib/types';
 import {
@@ -80,55 +80,55 @@ DATOCMS CONTENT MANAGEMENT API
 
 */
 
-const client = buildClient({
-  // Full access API token needed for read/write
-  apiToken: `${process.env.DATOCMS_API_TOKEN_FULLACCESS}`,
-  logLevel: LogLevel.BASIC,
-});
+// const client = buildClient({
+//   // Full access API token needed for read/write
+//   apiToken: `${process.env.DATOCMS_API_TOKEN_FULLACCESS}`,
+//   logLevel: LogLevel.BASIC,
+// });
 
-export const getAgencies = async () => {
-  const agencies = await client.items.list({ filter: { type: 'agency' } });
-  return agencies;
-};
+// export const getAgencies = async () => {
+//   const agencies = await client.items.list({ filter: { type: 'agency' } });
+//   return agencies;
+// };
 
-export const getAgendas = async () => {
-  const agendas = await client.items.list({ filter: { type: 'agenda' } });
-  return agendas;
-};
+// export const getAgendas = async () => {
+//   const agendas = await client.items.list({ filter: { type: 'agenda' } });
+//   return agendas;
+// };
 
-export const addAgenda = async (date: string, url: string, agency: Agency) => {
-  try {
-    const agenda = await client.items.create({
-      item_type: { type: 'item_type', id: '305922' }, // ID for Agenda MODEL
-      date: date,
-      url: url,
-      agency: agency.id,
-    });
-    return agenda;
-  } catch (err: any) {
-    return err.message;
-  }
-};
+// export const addAgenda = async (date: string, url: string, agency: Agency) => {
+//   try {
+//     const agenda = await client.items.create({
+//       item_type: { type: 'item_type', id: '305922' }, // ID for Agenda MODEL
+//       date: date,
+//       url: url,
+//       agency: agency.id,
+//     });
+//     return agenda;
+//   } catch (err: any) {
+//     return err.message;
+//   }
+// };
 
-export const updateAgenda = async (
-  agenda: Agenda,
-  updateSchema?: SchemaTypes.ItemUpdateSchema
-) => {
-  try {
-    const updatedAgenda = await client.items.update(
-      agenda.id,
-      updateSchema || {}
-    );
-    return updatedAgenda;
-  } catch (err: any) {
-    return err.message;
-  }
-};
+// export const updateAgenda = async (
+//   agenda: Agenda,
+//   updateSchema?: SchemaTypes.ItemUpdateSchema
+// ) => {
+//   try {
+//     const updatedAgenda = await client.items.update(
+//       agenda.id,
+//       updateSchema || {}
+//     );
+//     return updatedAgenda;
+//   } catch (err: any) {
+//     return err.message;
+//   }
+// };
 
-export const updateTest = async () => {
-  const agency = await getAgencyFromSlug('ocwut');
-  const agenda = await getAgenda(agency, '2022-09-27');
-  console.log(updateAgenda(agenda));
-};
+// export const updateTest = async () => {
+//   const agency = await getAgencyFromSlug('ocwut');
+//   const agenda = await getAgenda(agency, '2022-09-27');
+//   console.log(updateAgenda(agenda));
+// };
 
-updateTest();
+// updateTest();
