@@ -41,6 +41,7 @@ export const allAgencyAgendasQuery = `
 export const getAgendaQuery = `
   query ($agency_id:ItemId, $date:Date) {
     agenda(filter: {agency: {eq: $agency_id}, date: {eq: $date}}) {
+      id
       date
       url
     }

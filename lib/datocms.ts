@@ -1,5 +1,5 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-// import { buildClient, LogLevel, SchemaTypes } from '@datocms/cma-client-node';
+import { buildClient, LogLevel } from '@datocms/cma-client-node';
 import { GraphQLClient } from 'graphql-request';
 import { Agency, Agenda } from '@/lib/types';
 import {
@@ -13,7 +13,7 @@ import {
 /*
 
 DATOCMS CONTENT DELIVERY API
-(for read-only graphql requests)
+(for retrieval-only operations)
 
 */
 type Props = {
@@ -79,56 +79,40 @@ DATOCMS CONTENT MANAGEMENT API
 (for add/update/delete operations)
 
 */
+const client = buildClient({
+  // Full access API token needed for read/write
+  apiToken: `${process.env.DATOCMS_API_TOKEN_FULLACCESS}`,
+  logLevel: LogLevel.BASIC,
+});
 
-// const client = buildClient({
-//   // Full access API token needed for read/write
-//   apiToken: `${process.env.DATOCMS_API_TOKEN_FULLACCESS}`,
-//   logLevel: LogLevel.BASIC,
-// });
+export const addAgenda = async (date: string, url: string, agency: Agency) => {
+  try {
+    const agenda = await client.items.create({
+      item_type: { type: 'item_type', id: '305922' }, // ID for Agenda MODEL
+      date: date,
+      url: url,
+      agency: agency.id,
+    });
+    return agenda;
+  } catch (err: any) {
+    return err.message;
+  }
+};
 
-// export const getAgencies = async () => {
-//   const agencies = await client.items.list({ filter: { type: 'agency' } });
-//   return agencies;
-// };
+export const updateAgenda = async (agenda: Agenda, body: any) => {
+  try {
+    const updatedAgenda = await client.items.update(agenda.id, body);
+    return updatedAgenda;
+  } catch (err: any) {
+    return err.message;
+  }
+};
 
-// export const getAgendas = async () => {
-//   const agendas = await client.items.list({ filter: { type: 'agenda' } });
-//   return agendas;
-// };
-
-// export const addAgenda = async (date: string, url: string, agency: Agency) => {
-//   try {
-//     const agenda = await client.items.create({
-//       item_type: { type: 'item_type', id: '305922' }, // ID for Agenda MODEL
-//       date: date,
-//       url: url,
-//       agency: agency.id,
-//     });
-//     return agenda;
-//   } catch (err: any) {
-//     return err.message;
-//   }
-// };
-
-// export const updateAgenda = async (
-//   agenda: Agenda,
-//   updateSchema?: SchemaTypes.ItemUpdateSchema
-// ) => {
-//   try {
-//     const updatedAgenda = await client.items.update(
-//       agenda.id,
-//       updateSchema || {}
-//     );
-//     return updatedAgenda;
-//   } catch (err: any) {
-//     return err.message;
-//   }
-// };
-
-// export const updateTest = async () => {
-//   const agency = await getAgencyFromSlug('ocwut');
-//   const agenda = await getAgenda(agency, '2022-09-27');
-//   console.log(updateAgenda(agenda));
-// };
-
-// updateTest();
+export const deleteAgenda = async (agenda: Agenda) => {
+  try {
+    const deletedAgenda = await client.items.destroy(agenda.id);
+    return deletedAgenda;
+  } catch (err: any) {
+    return err.message;
+  }
+};
