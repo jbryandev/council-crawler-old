@@ -44,6 +44,7 @@ export const getAgendaQuery = `
       id
       date
       url
+      content
     }
   }
 `;

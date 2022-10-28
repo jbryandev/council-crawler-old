@@ -1,7 +1,6 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import { buildClient, LogLevel } from '@datocms/cma-client-node';
 import { GraphQLClient } from 'graphql-request';
-import { Agency, Agenda } from '@/lib/types';
 import {
   allAgenciesQuery,
   allAgendasQuery,
@@ -9,6 +8,20 @@ import {
   getAgencyQuery,
   getAgendaQuery,
 } from '@/lib/graphql';
+
+// Content types
+export type Agency = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+export type Agenda = {
+  id: string;
+  date: string;
+  url: string;
+  agency: { slug: string };
+};
 
 /*
 
@@ -85,16 +98,23 @@ const client = buildClient({
   logLevel: LogLevel.BASIC,
 });
 
-export const addAgenda = async (date: string, url: string, agency: Agency) => {
+export const addAgenda = async (
+  agency: Agency,
+  date: string,
+  url: string,
+  content: string
+) => {
   try {
     const agenda = await client.items.create({
       item_type: { type: 'item_type', id: '305922' }, // ID for Agenda MODEL
+      agency: agency.id,
       date: date,
       url: url,
-      agency: agency.id,
+      content: content,
     });
     return agenda;
   } catch (err: any) {
+    console.log(err);
     return err.message;
   }
 };
