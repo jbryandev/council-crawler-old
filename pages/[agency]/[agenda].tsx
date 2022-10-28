@@ -8,8 +8,13 @@ import Container from '@/components/container';
 import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
 import Date from '@/components/date';
-import { Agency, Agenda } from '@/lib/types';
-import { getAgenda, getAgencyFromSlug, getAllAgendas } from '@/lib/datocms';
+import {
+  Agency,
+  Agenda,
+  getAgenda,
+  getAgencyFromSlug,
+  getAllAgendas,
+} from '@/lib/datocms';
 import { GetStaticProps, GetStaticPaths } from 'next';
 
 type Props = {
@@ -38,21 +43,23 @@ export default function AgencyIndex({ agency, agenda, errors }: Props) {
               </title>
             </Head>
             <Header>
-              <Link href={`/${encodeURIComponent(agency.slug)}`}>
-                <a className='hover:underline'>{agency.name}</a>
+              <Link
+                href={`/${encodeURIComponent(agency.slug)}`}
+                className='hover:underline'
+              >
+                {agency.name}
               </Link>
             </Header>
             <PageTitle>
               <Date dateString={agenda.date} />
             </PageTitle>
             <div className='text-center md:text-left'>
-              <Link href={`${agenda.url}`}>
-                <a
-                  className='text-center md:text-left underline hover:text-success duration-200 transition-colors'
-                  target='_blank'
-                >
-                  Agenda Link
-                </a>
+              <Link
+                href={`${agenda.url}`}
+                className='text-center md:text-left underline hover:text-success duration-200 transition-colors'
+                target='_blank'
+              >
+                Agenda Link
               </Link>
             </div>
             <p className='mt-6 max-w-2xl'>{agenda.content}</p>

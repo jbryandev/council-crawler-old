@@ -44,8 +44,8 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
               <title>{agency.name} | Council Crawler</title>
             </Head>
             <Header>
-              <Link href='/'>
-                <a className='hover:underline'>Council Crawler</a>
+              <Link href='/' className='hover:underline'>
+                Council Crawler
               </Link>
             </Header>
             <PageTitle>{agency.name}</PageTitle>
@@ -57,10 +57,10 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
                       href={`/${encodeURIComponent(
                         agency?.slug
                       )}/${encodeURIComponent(agenda.date)}`}
-                    >
-                      <a className='underline hover:text-success duration-200 transition-colors'>
-                        {agenda.date}
-                      </a>
+                      className='underline hover:text-success duration-200 transition-colors'>
+
+                      {agenda.date}
+
                     </Link>
                   </li>
                 ))}
