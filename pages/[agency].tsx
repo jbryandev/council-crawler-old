@@ -21,6 +21,11 @@ type Props = {
   errors: string;
 };
 
+type Committee = {
+  id: string;
+  name: string;
+};
+
 export default function AgencyIndex({ agency, agendas, errors }: Props) {
   const router = useRouter();
 
