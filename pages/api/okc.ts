@@ -173,8 +173,6 @@ const checkForNewAgendas = async (agency: Agency) => {
     // Extract agenda contents
     const agendaHTML = await getAgendaHTML(agenda);
     agenda.content = convert(agendaHTML, { wordwrap: 130 });
-    // const $ = cheerio.load(agendaHTML);
-    // agenda.content = $('div#MeetingContents').text();
     if (!agenda.content) {
       throw 'Could not get agenda contents';
     }
