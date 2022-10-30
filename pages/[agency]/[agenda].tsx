@@ -30,6 +30,8 @@ export default function AgencyIndex({ agency, agenda, errors }: Props) {
     return <ErrorPage statusCode={404} />;
   }
 
+  const title = `${agenda.date} ${agency.name} | Council Crawler`;
+
   return (
     <Layout>
       <Container>
@@ -38,9 +40,7 @@ export default function AgencyIndex({ agency, agenda, errors }: Props) {
         ) : (
           <>
             <Head>
-              <title>
-                {agenda.date} {agency.name} | Council Crawler
-              </title>
+              <title>{title}</title>
             </Head>
             <Header>
               <Link
@@ -62,7 +62,7 @@ export default function AgencyIndex({ agency, agenda, errors }: Props) {
                 Agenda Link
               </Link>
             </div>
-            <p className='mt-6 max-w-2xl'>{agenda.content}</p>
+            <pre className='mt-6 max-w-2xl'>{agenda.content}</pre>
           </>
         )}
       </Container>
