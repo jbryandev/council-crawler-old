@@ -7,8 +7,9 @@ import Layout from '@/components/layout';
 import Container from '@/components/container';
 import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
-import { Agency, Agenda } from '@/lib/types';
 import {
+  Agency,
+  Agenda,
   getAgencyFromSlug,
   getAllAgencies,
   getAllAgencyAgendas,
@@ -21,17 +22,14 @@ type Props = {
   errors: string;
 };
 
-type Committee = {
-  id: string;
-  name: string;
-};
-
 export default function AgencyIndex({ agency, agendas, errors }: Props) {
   const router = useRouter();
 
   if ((!router.isFallback && !agency.slug) || errors) {
     return <ErrorPage statusCode={404} />;
   }
+
+  const title = `${agency.name} | Council Crawler`;
 
   return (
     <Layout>
@@ -41,7 +39,7 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
         ) : (
           <>
             <Head>
-              <title>{agency.name} | Council Crawler</title>
+              <title>{title}</title>
             </Head>
             <Header>
               <Link href='/' className='hover:underline'>
@@ -57,10 +55,9 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
                       href={`/${encodeURIComponent(
                         agency?.slug
                       )}/${encodeURIComponent(agenda.date)}`}
-                      className='underline hover:text-success duration-200 transition-colors'>
-
+                      className='underline hover:text-success duration-200 transition-colors'
+                    >
                       {agenda.date}
-
                     </Link>
                   </li>
                 ))}

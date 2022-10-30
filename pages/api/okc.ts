@@ -14,15 +14,14 @@ Rough Order of Operations:
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import {
   Agency,
-  Agenda,
   getAgencyFromSlug,
   getAllAgencyAgendas,
   addAgenda,
 } from '@/lib/datocms';
 import axios from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
-import * as cheerio from 'cheerio';
 import { parse, format } from 'date-fns';
+import { convert } from 'html-to-text';
 
 // Types
 type Committee = {
@@ -110,17 +109,22 @@ const findMeeting = async (meetings: Meeting[], committee: Committee) => {
     return m.committeeId === committee.id;
   });
   if (!meeting) {
-    throw `Could not find any upcoming meetings for the given committee ${committee.name}.`;
+    throw `Could not find any upcoming meetings for the given committee, ${committee.name}.`;
   }
+  // Format the date coming from OKC API so that it is compatible with db format
+  meeting.date = format(
+    parse(meeting.date, 'MMM dd, yyyy', new Date()),
+    'yyyy-MM-dd'
+  );
   return meeting;
 };
 
 // Checks that a given meeting doesn't already exist in the database
 const doesMeetingExist = async (meeting: Meeting, agency: Agency) => {
   const existingMeetings = await getAllAgencyAgendas(agency);
-  const alreadyExists = existingMeetings.find((agenda: Agenda) => {
-    agenda.date === meeting.date;
-  });
+  const alreadyExists = existingMeetings.find(
+    (agenda) => agenda.date == meeting.date
+  );
   return Boolean(alreadyExists);
 };
 
@@ -168,18 +172,15 @@ const checkForNewAgendas = async (agency: Agency) => {
 
     // Extract agenda contents
     const agendaHTML = await getAgendaHTML(agenda);
-    const $ = cheerio.load(agendaHTML);
-    agenda.content = $('div#MeetingContents').text();
+    agenda.content = convert(agendaHTML, { wordwrap: 130 });
+    // const $ = cheerio.load(agendaHTML);
+    // agenda.content = $('div#MeetingContents').text();
     if (!agenda.content) {
       throw 'Could not get agenda contents';
     }
 
     // Add agenda to database
-    const date = format(
-      parse(meeting.date, 'MMM dd, yyyy', new Date()),
-      'yyyy-MM-dd'
-    );
-    addAgenda(agency, date, agenda.url, agenda.content);
+    addAgenda(agency, meeting.date, agenda.url, agenda.content);
   } catch (error: any) {
     console.log(error);
   }
