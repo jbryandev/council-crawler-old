@@ -17,10 +17,11 @@ export type Agency = {
 };
 
 export type Agenda = {
+  agency: { slug: string };
   id: string;
   date: string;
   url: string;
-  agency: { slug: string };
+  content: string;
 };
 
 /*
