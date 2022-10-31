@@ -46,7 +46,7 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
                 Council Crawler
               </Link>
             </Header>
-            <PageTitle>{agency?.name}</PageTitle>
+            <PageTitle>{agency.name}</PageTitle>
             <ul className='text-center md:text-left'>
               {agendas &&
                 agendas.map((agenda) => (
