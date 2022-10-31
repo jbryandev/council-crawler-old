@@ -1,4 +1,3 @@
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { NextApiRequest, NextApiResponse } from 'next';
 
 // Handler function for API requests
@@ -8,9 +7,14 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      // Call all crawler functions
-      crawl();
-      res.status(200).json({ success: true });
+      const { authorization } = req.headers;
+      if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
+        // Call all crawler functions
+        crawl();
+        res.status(200).json({ success: true });
+      } else {
+        res.status(401).json({ succes: false });
+      }
     } catch (error: any) {
       res.status(500).json({ statusCode: 500, message: error.message });
     }

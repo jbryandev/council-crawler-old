@@ -11,7 +11,6 @@ Rough Order of Operations:
 8. Parse HTML to get agenda content
 
 */
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 import {
   Agency,
   getAgencyFromSlug,
