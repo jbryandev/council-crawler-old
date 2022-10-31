@@ -4,40 +4,40 @@ import Layout from '@/components/layout';
 import Container from '@/components/container';
 import Intro from '@/components/intro';
 import { GetStaticProps } from 'next';
-import { Agency } from '@/lib/types';
-import { getAllAgencies } from '@/lib/datocms';
+import { Agency, getAllAgencies } from '@/lib/datocms';
 
 type Props = {
   agencies: Agency[];
 };
 
 export default function Index({ agencies }: Props) {
-  return <>
-    <Layout>
-      <Head>
-        <title>Council Crawler</title>
-      </Head>
-      <Container>
-        <Intro />
-        <section className='flex-col md:flex-row flex items-center md:justify-between'>
-          <ul>
-            {agencies &&
-              agencies.map((agency) => (
-                <li className='list-disc list-inside' key={agency.id}>
-                  <Link
-                    href={`/${encodeURIComponent(agency.slug)}`}
-                    className='underline hover:text-success duration-200 transition-colors'>
-
-                    {agency.name}
-
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </section>
-      </Container>
-    </Layout>
-  </>;
+  return (
+    <>
+      <Layout>
+        <Head>
+          <title>Council Crawler</title>
+        </Head>
+        <Container>
+          <Intro />
+          <section className='flex-col md:flex-row flex items-center md:justify-between'>
+            <ul>
+              {agencies &&
+                agencies.map((agency) => (
+                  <li className='list-disc list-inside' key={agency.id}>
+                    <Link
+                      href={`/${encodeURIComponent(agency.slug)}`}
+                      className='underline hover:text-success duration-200 transition-colors'
+                    >
+                      {agency.name}
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+          </section>
+        </Container>
+      </Layout>
+    </>
+  );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
