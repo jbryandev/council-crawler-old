@@ -29,7 +29,7 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
     return <ErrorPage statusCode={404} />;
   }
 
-  const title = `${agency.name} | Council Crawler`;
+  const title = `${agency?.name} | Council Crawler`;
 
   return (
     <Layout>
@@ -70,7 +70,6 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Get the paths we want to pre-render based on agencies
   const agencies = await getAllAgencies();
   const paths = agencies.map((agency: Agency) => ({
     params: { agency: agency.slug },

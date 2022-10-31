@@ -1,4 +1,3 @@
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { useRouter } from 'next/router';
 import ErrorPage from 'next/error';
 import Head from 'next/head';
@@ -23,14 +22,14 @@ type Props = {
   errors: string;
 };
 
-export default function AgencyIndex({ agency, agenda, errors }: Props) {
+export default function AgendaIndex({ agency, agenda, errors }: Props) {
   const router = useRouter();
 
   if ((!router.isFallback && !agenda) || errors) {
     return <ErrorPage statusCode={404} />;
   }
 
-  const title = `${agenda.date} ${agency.name} | Council Crawler`;
+  const title = `${agenda?.date} ${agency?.name} | Council Crawler`;
 
   return (
     <Layout>
@@ -70,6 +69,14 @@ export default function AgencyIndex({ agency, agenda, errors }: Props) {
   );
 }
 
+export const getStaticPaths: GetStaticPaths = async () => {
+  const agendas = await getAllAgendas();
+  const paths = agendas.map((agenda: Agenda) => ({
+    params: { agency: agenda.agency.slug, agenda: agenda.date },
+  }));
+  return { paths, fallback: true };
+};
+
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const slug = params?.agency as string;
@@ -92,12 +99,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   } catch (err: any) {
     return { props: { errors: err.message } };
   }
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const agendas = await getAllAgendas();
-  const paths = agendas.map((agenda: Agenda) => ({
-    params: { agency: agenda.agency.slug, agenda: agenda.date },
-  }));
-  return { paths, fallback: true };
 };
