@@ -25,7 +25,7 @@ export default async function handler(
   }
 }
 
-const crawl = async () => {
+const crawl = () => {
   console.log('Crawling...');
-  await OKC_crawl('ocwut');
+  OKC_crawl('ocwut');
 };
