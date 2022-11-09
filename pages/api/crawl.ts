@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { checkForNewAgendas as OKC_crawl } from '@/crawlers/okc';
 
 // Handler function for API requests
 export default async function handler(
@@ -24,6 +25,7 @@ export default async function handler(
   }
 }
 
-const crawl = () => {
-  console.log('crawling...');
+const crawl = async () => {
+  console.log('Crawling...');
+  await OKC_crawl('ocwut');
 };
