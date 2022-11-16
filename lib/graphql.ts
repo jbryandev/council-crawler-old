@@ -24,6 +24,7 @@ export const allAgendasQuery = `
       date
       agency {
         slug
+        name
       }
     }
   }

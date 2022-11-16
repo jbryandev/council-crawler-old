@@ -24,7 +24,14 @@
       "@/crawlers/*": ["crawlers/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "pages/api/agenda/index.js",
+    "lib/webflow.js",
+    "utils/sample-data.ts"
+  ],
   "exclude": ["node_modules"],
   "tsc-alias": {
     "verbose": true,
