@@ -7,22 +7,23 @@ import Layout from '@/components/layout';
 import Container from '@/components/container';
 import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
+import { IAgency } from '@/models/agency.model';
+import { GetStaticProps, GetStaticPaths } from 'next';
 import {
-  Agency,
-  Agenda,
   getAgencyFromSlug,
   getAllAgencies,
-  getAllAgencyAgendas,
-} from '@/lib/datocms';
-import { GetStaticProps, GetStaticPaths } from 'next';
+  getAllAgencyMeetings,
+} from '@/utils/mongodb';
+import { IMeeting } from '@/models/meeting.model';
+import { format } from 'date-fns';
 
 type Props = {
-  agency: Agency;
-  agendas: Agenda[];
+  agency: IAgency;
+  meetings: IMeeting[];
   errors: string;
 };
 
-export default function AgencyIndex({ agency, agendas, errors }: Props) {
+export default function AgencyIndex({ agency, meetings, errors }: Props) {
   const router = useRouter();
 
   if ((!router.isFallback && !agency.slug) || errors) {
@@ -48,16 +49,17 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
             </Header>
             <PageTitle>{agency.name}</PageTitle>
             <ul className='text-center md:text-left'>
-              {agendas &&
-                agendas.map((agenda) => (
-                  <li className='list-disc list-inside' key={agenda.id}>
+              {meetings &&
+                meetings.map((meeting) => (
+                  <li className='list-disc list-inside' key={meeting._id}>
                     <Link
-                      href={`/${encodeURIComponent(
-                        agency?.slug
-                      )}/${encodeURIComponent(agenda.date)}`}
+                      href={`/${encodeURIComponent(agency?.slug)}/${
+                        meeting._id
+                      }`}
                       className='underline hover:text-success duration-200 transition-colors'
                     >
-                      {agenda.date}
+                      {format(new Date(meeting.date), 'MMMM d, yyyy')}
+                      {` - ${meeting.name}`}
                     </Link>
                   </li>
                 ))}
@@ -71,7 +73,7 @@ export default function AgencyIndex({ agency, agendas, errors }: Props) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const agencies = await getAllAgencies();
-  const paths = agencies.map((agency: Agency) => ({
+  const paths = agencies.map((agency) => ({
     params: { agency: agency.slug },
   }));
 
@@ -85,12 +87,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     if (!agency) {
       return { notFound: true };
     }
-    const agendas = await getAllAgencyAgendas(agency);
+    const meetings = await getAllAgencyMeetings(agency);
 
     return {
       props: {
         agency,
-        agendas,
+        meetings,
       },
     };
   } catch (err: any) {

@@ -4,10 +4,11 @@ import Layout from '@/components/layout';
 import Container from '@/components/container';
 import Intro from '@/components/intro';
 import { GetStaticProps } from 'next';
-import { Agency, getAllAgencies } from '@/lib/datocms';
+import { IAgency } from '@/models/agency.model';
+import { getAllAgencies } from '@/utils/mongodb';
 
 type Props = {
-  agencies: Agency[];
+  agencies: IAgency[];
 };
 
 export default function Index({ agencies }: Props) {
@@ -23,7 +24,7 @@ export default function Index({ agencies }: Props) {
             <ul>
               {agencies &&
                 agencies.map((agency) => (
-                  <li className='list-disc list-inside' key={agency.id}>
+                  <li className='list-disc list-inside' key={agency._id}>
                     <Link
                       href={`/${encodeURIComponent(agency.slug)}`}
                       className='underline hover:text-success duration-200 transition-colors'
@@ -41,7 +42,7 @@ export default function Index({ agencies }: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const agencies: Agency[] = await getAllAgencies();
+  const agencies = await getAllAgencies();
   return {
     props: { agencies },
   };

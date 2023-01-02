@@ -14,24 +14,17 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "outDir": "./lib",
+    "outDir": "db",
     "baseUrl": ".",
     "paths": {
       "@/components/*": ["components/*"],
-      "@/lib/*": ["lib/*"],
       "@/styles/*": ["styles/*"],
       "@/utils/*": ["utils/*"],
+      "@/models/*": ["models/*"],
       "@/crawlers/*": ["crawlers/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "pages/api/agenda/index.js",
-    "lib/webflow.js",
-    "utils/sample-data.ts"
-  ],
+  "include": ["next-env.d.ts", "utils/global.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
   "tsc-alias": {
     "verbose": true,
