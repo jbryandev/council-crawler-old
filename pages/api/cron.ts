@@ -9,6 +9,7 @@ export default async function handler(
       const { authorization } = req.headers;
 
       if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
+        console.log('Cron job running...');
         res.status(200).json({ success: true });
       } else {
         res.status(401).json({ success: false });
