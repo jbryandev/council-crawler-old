@@ -7,14 +7,10 @@ import Layout from '@/components/layout';
 import Container from '@/components/container';
 import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
-import { IAgency } from '@/models/agency.model';
+import Agency, { IAgency } from '@/models/agency.model';
 import { GetStaticProps, GetStaticPaths } from 'next';
-import {
-  getAgencyFromSlug,
-  getAllAgencies,
-  getAllAgencyMeetings,
-} from '@/utils/mongodb';
-import { IMeeting } from '@/models/meeting.model';
+import Meeting, { IMeeting } from '@/models/meeting.model';
+import dbConnect from '@/utils/mongodb';
 import { format } from 'date-fns';
 
 type Props = {
@@ -51,11 +47,14 @@ export default function AgencyIndex({ agency, meetings, errors }: Props) {
             <ul className='text-center md:text-left'>
               {meetings &&
                 meetings.map((meeting) => (
-                  <li className='list-disc list-inside' key={meeting._id}>
+                  <li
+                    className='list-disc list-inside'
+                    key={meeting._id.toString()}
+                  >
                     <Link
-                      href={`/${encodeURIComponent(agency?.slug)}/${
-                        meeting._id
-                      }`}
+                      href={`/${encodeURIComponent(
+                        agency.slug
+                      )}/${meeting._id.toString()}`}
                       className='underline hover:text-success duration-200 transition-colors'
                     >
                       {format(new Date(meeting.date), 'MMMM d, yyyy')}
@@ -64,6 +63,14 @@ export default function AgencyIndex({ agency, meetings, errors }: Props) {
                   </li>
                 ))}
             </ul>
+            <section className='mt-10'>
+              <Link
+                href={`/meetings/fetch?agency=${agency.slug}`}
+                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+              >
+                Fetch Meetings
+              </Link>
+            </section>
           </>
         )}
       </Container>
@@ -72,7 +79,10 @@ export default function AgencyIndex({ agency, meetings, errors }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const agencies = await getAllAgencies();
+  await dbConnect();
+
+  const agencies = await Agency.find();
+
   const paths = agencies.map((agency) => ({
     params: { agency: agency.slug },
   }));
@@ -81,13 +91,23 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
+  await dbConnect();
+
   try {
     const slug = params?.agency as string;
-    const agency = await getAgencyFromSlug(slug);
+
+    const agency = await Agency.findOne({ slug: slug }).lean();
+    agency._id = agency._id.toString();
     if (!agency) {
       return { notFound: true };
     }
-    const meetings = await getAllAgencyMeetings(agency);
+
+    const meetings = await Meeting.find({ agency: agency }).lean();
+    meetings.map((meeting) => {
+      meeting._id = meeting._id.toString();
+      meeting.agency = meeting.agency.toString();
+      meeting.date = meeting.date.toString();
+    });
 
     return {
       props: {
@@ -95,7 +115,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         meetings,
       },
     };
-  } catch (err: any) {
-    return { props: { errors: err.message } };
+  } catch (error: any) {
+    return { props: { errors: error.message } };
   }
 };

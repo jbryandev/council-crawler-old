@@ -7,15 +7,10 @@ import Container from '@/components/container';
 import Header from '@/components/header';
 import PageTitle from '@/components/page-title';
 import { GetStaticProps, GetStaticPaths } from 'next';
-import { IAgency } from '@/models/agency.model';
-import { IMeeting } from '@/models/meeting.model';
-import {
-  getAgencyById,
-  getAgencyFromSlug,
-  getAllMeetings,
-  getMeeting,
-} from '@/utils/mongodb';
+import Agency, { IAgency } from '@/models/agency.model';
+import Meeting, { IMeeting } from '@/models/meeting.model';
 import { format } from 'date-fns';
+import dbConnect from '@/utils/mongodb';
 
 type Props = {
   agency: IAgency;
@@ -28,10 +23,8 @@ export default function MeetingIndex({ agency, meeting, errors }: Props) {
   if ((!router.isFallback && !meeting) || errors) {
     return <ErrorPage statusCode={404} />;
   }
-
   const titleDate = format(new Date(meeting.date), 'M/d/yy');
   const title = `${titleDate} - ${agency?.name}`;
-
   return (
     <Layout>
       <Container>
@@ -53,15 +46,17 @@ export default function MeetingIndex({ agency, meeting, errors }: Props) {
             <PageTitle>
               {format(new Date(meeting.date), 'MMMM d, yyyy')}
             </PageTitle>
-            <div className='text-center md:text-left'>
-              <Link
-                href={`${meeting.url}`}
-                className='text-center md:text-left underline hover:text-success duration-200 transition-colors'
-                target='_blank'
-              >
-                Agenda Link
-              </Link>
-            </div>
+            {meeting.url && (
+              <div className='text-center md:text-left'>
+                <Link
+                  href={`${meeting.url}`}
+                  className='text-center md:text-left underline hover:text-success duration-200 transition-colors'
+                  target='_blank'
+                >
+                  Agenda Link
+                </Link>
+              </div>
+            )}
             <pre className='mt-6 max-w-2xl'>{meeting.agenda}</pre>
           </>
         )}
@@ -71,15 +66,19 @@ export default function MeetingIndex({ agency, meeting, errors }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const meetings: IMeeting[] = await getAllMeetings();
+  await dbConnect();
+
+  const meetings: IMeeting[] = await Meeting.find();
+
   const paths = await Promise.all(
     meetings.map(async (meeting) => {
-      const agency: IAgency = await getAgencyById(meeting.agency);
+      const agency = await Agency.findById(meeting.agency);
       return {
-        params: { agency: agency.slug, meeting: meeting._id },
+        params: { agency: agency.slug, meeting: meeting._id.toString() },
       };
     })
   );
+
   return {
     paths: paths,
     fallback: false,
@@ -88,13 +87,22 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
+    await dbConnect();
+
     const slug = params?.agency as string;
-    const agency = await getAgencyFromSlug(slug);
+
+    const agency = await Agency.findOne({ slug: slug }).lean();
+    agency._id = agency._id.toString();
     if (!agency) {
       return { notFound: true };
     }
+
     const id = params?.meeting as string;
-    const meeting = await getMeeting(id);
+
+    const meeting = await Meeting.findById(id).lean();
+    meeting._id = meeting._id.toString();
+    meeting.date = meeting.date.toString();
+    meeting.agency = meeting.agency.toString();
     if (!meeting) {
       return { notFound: true };
     }

@@ -1,7 +1,7 @@
-import { Schema, model, models } from 'mongoose';
+import { Schema, Types, model, models } from 'mongoose';
 
 export interface IAgency {
-  _id: string;
+  _id: Types.ObjectId;
   name: string;
   slug: string;
   url: string;
