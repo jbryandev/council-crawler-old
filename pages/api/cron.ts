@@ -1,3 +1,6 @@
+import crawl from '@/crawlers/crawl';
+import Agency, { IAgency } from '@/models/agency.model';
+import dbConnect from '@/utils/mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -9,7 +12,18 @@ export default async function handler(
       const { authorization } = req.headers;
 
       if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
-        console.log('Cron job running...');
+        await dbConnect();
+
+        const agencies: IAgency[] = await Agency.find();
+
+        agencies.forEach(async (agency) => {
+          try {
+            await crawl(agency.slug);
+          } catch (error: any) {
+            console.error(error);
+          }
+        });
+
         res.status(200).json({ success: true });
       } else {
         res.status(401).json({ success: false });

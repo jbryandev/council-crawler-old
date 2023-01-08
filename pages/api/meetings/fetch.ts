@@ -1,14 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '@/utils/mongodb';
-import { crawl as OKCcrawl } from '@/crawlers/okc';
-
-export async function crawl(slug: string) {
-  if (slug == 'ocwut') {
-    return await OKCcrawl(slug);
-  } else {
-    throw `No crawler function for the given slug, '${slug}'.`;
-  }
-}
+import crawl from '@/crawlers/crawl';
 
 export default async function handler(
   req: NextApiRequest,
